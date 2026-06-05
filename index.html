@@ -200,7 +200,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="hero-section" class="min-h-screen flex flex-col lg:flex-row items-center justify-center relative px-4 pt-20 overflow-hidden">
+    <section id="hero-section" class="min-h-screen flex items-center justify-center relative px-4 pt-20 overflow-hidden">
         
         <!-- Subheader text (now scrolls away with hero) -->
         <div class="hidden md:block absolute top-8 left-1/2 -translate-x-1/2 text-xs tracking-[0.3em] opacity-60">
@@ -214,10 +214,10 @@
             </div>
         </div>
         <!-- Gameboy Mobile Positioning Wrapper -->
-        <div class="order-2 lg:order-none relative lg:absolute lg:top-1/2 w-full lg:w-auto lg:left-auto lg:right-[5%] lg:-translate-y-1/2 flex justify-center z-20 pointer-events-none mt-12 lg:mt-0">
-            <div id="gameboy-wrapper" class="float-obj pointer-events-auto" style="animation-delay: 1s;">
+        <div class="absolute top-[65%] sm:top-1/2 right-[-20%] sm:right-[5%] -translate-y-1/2 z-20 pointer-events-none scale-75 sm:scale-100 origin-right">
+            <div id="gameboy-wrapper" class="pointer-events-auto">
                 <!-- Screenshot 118 Blue Minecraft Gameboy -->
-                <div class="relative w-[280px] aspect-[1/1.6] bg-[#4c76b9] floating z-10 flex flex-col pt-8 px-4" 
+                <div id="gb-casing" class="relative w-[280px] aspect-[1/1.6] bg-[#4c76b9] z-10 flex flex-col pt-8 px-4" 
                      style="box-shadow: inset -16px -16px 0px #365991, inset 8px 8px 0px #7b9fe8, 20px 20px 0px rgba(0,0,0,0.8);">
                 
                 <!-- Screen Bezel -->
@@ -297,7 +297,7 @@
         </div>
 
         <!-- Main Title -->
-        <div class="text-center z-10 hero-content order-1 lg:order-none" id="hero-main">
+        <div class="text-center z-10 hero-content" id="hero-main">
             <h1 class="pixel-font text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] hero-text flex flex-col gap-6">
                 <span>FULLSTACK</span>
                 <span>DEV</span>
@@ -581,12 +581,22 @@
         let gbScreen = document.getElementById("gb-screen");
 
         if (gbWrapper && gbScreen) {
+            // Continuous floating and tilting animation!
+            let floatAnim = gsap.to("#gb-casing", {
+                y: -25,
+                rotation: -10, // The tilt the user asked for
+                duration: 2,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut"
+            });
+
             let computeZoom = () => {
-                // Temporarily remove float-obj to get stable coordinates
-                gbWrapper.classList.remove('float-obj');
+                // Temporarily straighten the Gameboy to get accurate center coordinates
+                gsap.set("#gb-casing", { rotation: 0, y: 0 });
+                
                 let gbRect = gbWrapper.getBoundingClientRect();
                 let screenRect = gbScreen.getBoundingClientRect();
-                gbWrapper.classList.add('float-obj');
 
                 // Calculate the exact percentage within the Gameboy wrapper where the screen center is located
                 let originX = ((screenRect.left + screenRect.width / 2) - gbRect.left) / gbRect.width * 100;
@@ -618,11 +628,11 @@
                         scrub: 1,
                         pin: true,
                         onUpdate: (self) => {
-                            // Pause the floating CSS animation when scrolling starts
+                            // Pause the floating animation when scrolling starts
                             if (self.progress > 0) {
-                                gbWrapper.style.animationPlayState = 'paused';
+                                floatAnim.pause();
                             } else {
-                                gbWrapper.style.animationPlayState = 'running';
+                                floatAnim.play();
                             }
                         }
                     }
@@ -638,6 +648,14 @@
                 tl.to(gbWrapper, {
                     x: zoomData.x,
                     y: zoomData.y,
+                    duration: 0.2,
+                    ease: "power1.inOut"
+                }, 0.1);
+
+                // Straighten the Gameboy so the screen is perfectly level!
+                tl.to("#gb-casing", {
+                    rotation: 0,
+                    y: 0,
                     duration: 0.2,
                     ease: "power1.inOut"
                 }, 0.1);
