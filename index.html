@@ -217,7 +217,7 @@
         <div class="absolute top-[65%] sm:top-1/2 right-[-5%] sm:right-[5%] -translate-y-1/2 z-20 pointer-events-none scale-[0.85] sm:scale-100 origin-right">
             <div id="gameboy-wrapper" class="pointer-events-auto">
                 <!-- Screenshot 118 Blue Minecraft Gameboy -->
-                <div id="gb-casing" class="relative w-[280px] aspect-[1/1.6] bg-[#4c76b9] z-10 flex flex-col pt-8 px-4" 
+                <div id="gb-casing" class="relative w-[280px] aspect-[1/1.6] bg-[#4c76b9] z-10 flex flex-col pt-8 px-4 transform -rotate-6" 
                      style="box-shadow: inset -16px -16px 0px #365991, inset 8px 8px 0px #7b9fe8, 20px 20px 0px rgba(0,0,0,0.8);">
                 
                 <!-- Screen Bezel -->
@@ -583,7 +583,7 @@
 
         if (gbWrapper && gbScreen) {
             // Continuous floating and tilting animation!
-            let floatAnim = gsap.to("#gb-casing", {
+            let floatAnim = gsap.to(gbWrapper, {
                 y: -20,
                 rotation: 5,
                 duration: 3,
@@ -594,10 +594,14 @@
 
             let computeZoom = () => {
                 // Temporarily straighten the Gameboy to get accurate center coordinates
-                gsap.set("#gb-casing", { rotation: 0, y: 0 });
+                gsap.set(gbWrapper, { rotation: 0, y: 0 });
+                gsap.set("#gb-casing", { rotation: 0 });
                 
                 let gbRect = gbWrapper.getBoundingClientRect();
                 let screenRect = gbScreen.getBoundingClientRect();
+
+                // Restore the permanent CSS tilt!
+                gsap.set("#gb-casing", { clearProps: "transform" });
 
                 // Calculate the exact percentage within the Gameboy wrapper where the screen center is located
                 let originX = ((screenRect.left + screenRect.width / 2) - gbRect.left) / gbRect.width * 100;
@@ -649,6 +653,7 @@
                 tl.to(gbWrapper, {
                     x: zoomData.x,
                     y: zoomData.y,
+                    rotation: 0,
                     duration: 0.2,
                     ease: "power1.inOut"
                 }, 0.1);
