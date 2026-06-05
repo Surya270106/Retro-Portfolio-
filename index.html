@@ -200,7 +200,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="hero-section" class="min-h-screen flex items-center justify-center relative px-4 pt-20 overflow-hidden">
+    <section id="hero-section" class="min-h-screen flex flex-col lg:flex-row items-center justify-center relative px-4 pt-20 overflow-hidden">
         
         <!-- Subheader text (now scrolls away with hero) -->
         <div class="hidden md:block absolute top-8 left-1/2 -translate-x-1/2 text-xs tracking-[0.3em] opacity-60">
@@ -214,7 +214,7 @@
             </div>
         </div>
         <!-- Gameboy Mobile Positioning Wrapper -->
-        <div class="absolute top-[65%] lg:top-1/2 left-0 w-full lg:w-auto lg:left-auto lg:right-[5%] -translate-y-1/2 flex justify-center z-20 pointer-events-none">
+        <div class="order-2 lg:order-none relative lg:absolute lg:top-1/2 w-full lg:w-auto lg:left-auto lg:right-[5%] lg:-translate-y-1/2 flex justify-center z-20 pointer-events-none mt-12 lg:mt-0">
             <div id="gameboy-wrapper" class="float-obj pointer-events-auto" style="animation-delay: 1s;">
                 <!-- Screenshot 118 Blue Minecraft Gameboy -->
                 <div class="relative w-[280px] aspect-[1/1.6] bg-[#4c76b9] floating z-10 flex flex-col pt-8 px-4" 
@@ -297,7 +297,7 @@
         </div>
 
         <!-- Main Title -->
-        <div class="text-center z-10 hero-content -translate-y-32 lg:-translate-y-0 transition-transform" id="hero-main">
+        <div class="text-center z-10 hero-content order-1 lg:order-none" id="hero-main">
             <h1 class="pixel-font text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] hero-text flex flex-col gap-6">
                 <span>FULLSTACK</span>
                 <span>DEV</span>
