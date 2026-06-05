@@ -213,10 +213,12 @@
                 <span class="pixel-font text-[8px] opacity-50">.PY</span>
             </div>
         </div>
-        <div id="gameboy-wrapper" class="hidden lg:block absolute top-1/2 -translate-y-1/2 right-[5%] float-obj" style="animation-delay: 1s;">
-            <!-- Screenshot 118 Blue Minecraft Gameboy -->
-            <div class="relative w-[280px] aspect-[1/1.6] bg-[#4c76b9] floating z-10 flex flex-col pt-8 px-4" 
-                 style="box-shadow: inset -16px -16px 0px #365991, inset 8px 8px 0px #7b9fe8, 20px 20px 0px rgba(0,0,0,0.8);">
+        <!-- Gameboy Mobile Positioning Wrapper -->
+        <div class="absolute top-[65%] lg:top-1/2 left-0 w-full lg:w-auto lg:left-auto lg:right-[5%] -translate-y-1/2 flex justify-center z-20 pointer-events-none">
+            <div id="gameboy-wrapper" class="float-obj pointer-events-auto" style="animation-delay: 1s;">
+                <!-- Screenshot 118 Blue Minecraft Gameboy -->
+                <div class="relative w-[280px] aspect-[1/1.6] bg-[#4c76b9] floating z-10 flex flex-col pt-8 px-4" 
+                     style="box-shadow: inset -16px -16px 0px #365991, inset 8px 8px 0px #7b9fe8, 20px 20px 0px rgba(0,0,0,0.8);">
                 
                 <!-- Screen Bezel -->
                 <div class="bg-[#1c2321] p-4 pb-8 relative w-full aspect-[1/1]" style="box-shadow: inset -8px -8px 0px #0a0d0c, inset 4px 4px 0px #2a3431;">
@@ -292,9 +294,10 @@
                 </div>
             </div>
         </div>
+        </div>
 
         <!-- Main Title -->
-        <div class="text-center z-10 hero-content" id="hero-main">
+        <div class="text-center z-10 hero-content -translate-y-32 lg:-translate-y-0 transition-transform" id="hero-main">
             <h1 class="pixel-font text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] hero-text flex flex-col gap-6">
                 <span>FULLSTACK</span>
                 <span>DEV</span>
