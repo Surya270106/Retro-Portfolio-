@@ -333,8 +333,19 @@
                 </div>
 
                 <!-- Right Column: Visualizer -->
-                <div class="lg:sticky lg:top-1/4 h-[400px] flex flex-col justify-end">
+                <div class="order-first lg:order-last lg:sticky lg:top-1/4 h-[400px] flex flex-col justify-end relative">
                     <div class="w-full aspect-square bg-[#0a0a0a] brutalist-border p-8 relative overflow-hidden flex items-center justify-center mb-6">
+                        
+                        <!-- Mobile Navigation Arrows -->
+                        <div class="absolute inset-y-0 left-0 right-0 flex justify-between items-center px-4 z-20 lg:hidden pointer-events-none">
+                            <button id="prev-project-btn" class="pointer-events-auto w-10 h-10 bg-white/10 backdrop-blur border border-white/20 rounded-full flex items-center justify-center hover:bg-white/20 active:scale-95 transition-all shadow-lg text-white">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button id="next-project-btn" class="pointer-events-auto w-10 h-10 bg-white/10 backdrop-blur border border-white/20 rounded-full flex items-center justify-center hover:bg-white/20 active:scale-95 transition-all shadow-lg text-white">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                        
                         <!-- Grid overlay -->
                         <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(var(--text-light) 1px, transparent 1px), linear-gradient(90deg, var(--text-light) 1px, transparent 1px); background-size: 40px 40px;"></div>
                         
@@ -512,42 +523,62 @@
         // Background color transitions based on selected project
         const bgColors = ['bg-teal-800', 'bg-zinc-900', 'bg-slate-800', 'bg-stone-900'];
 
-        projectItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                // Remove active class from all
-                projectItems.forEach(p => p.classList.remove('active'));
-                
-                // Add active class to hovered
-                item.classList.add('active');
-                
-                // Update text
-                const desc = item.getAttribute('data-desc');
-                
-                gsap.to(projectDesc, {
-                    opacity: 0,
-                    duration: 0.2,
-                    onComplete: () => {
-                        projectDesc.innerText = desc;
-                        gsap.to(projectDesc, {opacity: 0.8, duration: 0.2});
-                    }
-                });
+        let currentProjectIndex = 0;
 
-                // Update visual
-                const index = parseInt(item.getAttribute('data-index'));
-                gsap.to(projectVisual, {
-                    scale: 0.8,
-                    opacity: 0,
-                    duration: 0.2,
-                    onComplete: () => {
-                        projectVisual.innerHTML = projectVisuals[index];
-                        gsap.to(projectVisual, {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.5)"});
-                    }
-                });
+        function setProject(index) {
+            currentProjectIndex = index;
+            const item = projectItems[index];
 
-                // Update Background Color smoothly
-                workSection.className = `min-h-screen py-32 px-6 lg:px-20 transition-colors duration-700 ${bgColors[index]}`;
+            // Remove active class from all
+            projectItems.forEach(p => p.classList.remove('active'));
+            item.classList.add('active');
+            
+            // Update text
+            const desc = item.getAttribute('data-desc');
+            gsap.to(projectDesc, {
+                opacity: 0,
+                duration: 0.2,
+                onComplete: () => {
+                    projectDesc.innerText = desc;
+                    gsap.to(projectDesc, {opacity: 0.8, duration: 0.2});
+                }
             });
+
+            // Update visual
+            gsap.to(projectVisual, {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.2,
+                onComplete: () => {
+                    projectVisual.innerHTML = projectVisuals[index];
+                    gsap.to(projectVisual, {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.5)"});
+                }
+            });
+
+            // Update Background Color smoothly
+            workSection.className = `min-h-screen py-32 px-6 lg:px-20 transition-colors duration-700 ${bgColors[index]}`;
+        }
+
+        projectItems.forEach((item, index) => {
+            item.addEventListener('mouseenter', () => setProject(index));
         });
+
+        const prevBtn = document.getElementById('prev-project-btn');
+        const nextBtn = document.getElementById('next-project-btn');
+
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => {
+                let newIndex = currentProjectIndex - 1;
+                if (newIndex < 0) newIndex = projectItems.length - 1;
+                setProject(newIndex);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                let newIndex = currentProjectIndex + 1;
+                if (newIndex >= projectItems.length) newIndex = 0;
+                setProject(newIndex);
+            });
+        }
 
         // Intro GSAP Animations
         gsap.from("header", {y: -50, opacity: 0, duration: 1, delay: 0.2, ease: "power3.out"});
